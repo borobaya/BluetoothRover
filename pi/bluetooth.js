@@ -50,8 +50,10 @@ socket.on('message', function(msg){
         console.log(hardware_name, "| value =", value);
 
         var characteristic = service.characteristics[0];
-        characteristic.value = value;
-        characteristic.onNotify();
+        if (characteristic.value != value) {
+            characteristic.value = value;
+            characteristic.valueUpdated();
+        }
     } else if (parts.length>=6) {
         // New hardware detected
         service = new HardwareService(msg, this);

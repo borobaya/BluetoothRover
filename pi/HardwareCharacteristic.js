@@ -7,7 +7,7 @@ var Descriptor = bleno.Descriptor;
 var HardwareCharacteristic = function(hardware_name, socket) {
     HardwareCharacteristic.super_.call(this, {
         uuid: '2AAE', //'2A8A', //'2A6E', // 32-bit signed integer
-        properties: [ 'read', 'notify' ],
+        properties: [ 'read', 'notify', 'indicate' ],
         value: null,
         descriptors: []
     });
@@ -15,6 +15,13 @@ var HardwareCharacteristic = function(hardware_name, socket) {
     this.socket = socket;
     this.hardware_name = hardware_name;
     this._updateValueCallback = null;
+    this.valueUpdated = function () {
+        if (this._updateValueCallback) {
+            var _value = new Buffer(4); // 32-bits == 4 bytes
+            _value.writeInt32LE(this.value, 0);
+            this._updateValueCallback(_value);
+        }
+    }
 
     this.descriptors.push(new Descriptor({
         uuid: '2901',
@@ -26,7 +33,7 @@ util.inherits(HardwareCharacteristic, Characteristic);
 
 HardwareCharacteristic.prototype.onReadRequest = function(offset, callback) {
     if ((this.value==null)||isNaN(this.value)) this.value = 0.0;
-    console.log("ReadRequest | value = ", this.value);
+    console.log("ReadRequest | value =", this.value);
     try {
         var _value = new Buffer(4); // 32-bits == 4 bytes
         _value.writeInt32LE(this.value, 0);
@@ -39,7 +46,9 @@ HardwareCharacteristic.prototype.onWriteRequest = function(data, offset, without
     console.log("WriteRequest | new value =", data);
     try {
         // this.value = data.readInt32LE(0);
-        // this.onNotify();
+        // if (this._updateValueCallback) {
+        //     this._updateValueCallback(data);
+        // }
 
         var value = data.readInt32LE(0);
         this.socket.send("set "+this.hardware_name+" "+value.toString());
@@ -50,7 +59,7 @@ HardwareCharacteristic.prototype.onWriteRequest = function(data, offset, without
     }
 };
 HardwareCharacteristic.prototype.onSubscribe = function(maxValueSize, updateValueCallback) {
-    console.log("onSubscribe |")
+    console.log("onSubscribe |", maxValueSize, "|", updateValueCallback)
     this._updateValueCallback = updateValueCallback;
 };
 HardwareCharacteristic.prototype.onUnsubscribe = function() {
@@ -59,14 +68,17 @@ HardwareCharacteristic.prototype.onUnsubscribe = function() {
 };
 HardwareCharacteristic.prototype.onNotify = function() {
     console.log("onNotify |")
-    if (this._updateValueCallback) {
-        var _value = new Buffer(4); // 32-bits == 4 bytes
-        try {
-            _value.writeInt32LE(this.value, 0);
-            this._updateValueCallback(_value);
-        } catch (err) {
-        }
-    }
+    // if (this._updateValueCallback) {
+    //     console.log("point 1")
+    //     var _value = new Buffer(4); // 32-bits == 4 bytes
+    //     try {
+    //         console.log("point 2", this==this._updateValueCallback)
+    //         _value.writeInt32LE(this.value, 0);
+    //         this._updateValueCallback(_value);
+    //     } catch (err) {
+    //         console.log("point 3 err")
+    //     }
+    // }
 };
 
 module.exports = HardwareCharacteristic;

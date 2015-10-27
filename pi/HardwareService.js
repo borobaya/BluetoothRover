@@ -26,6 +26,7 @@ var HardwareService = function(msg, socket) {
     // Create the service
     var characteristic = new HardwareCharacteristic(hardware_name, socket);
     if (is_writable) characteristic.properties.push('write');
+    if (is_writable) characteristic.properties.push('writeWithoutResponse');
     this.characteristics.push(characteristic);
 
     console.log("New hardware registered: ", hardware_name, "\n\tvalue: ", value,
