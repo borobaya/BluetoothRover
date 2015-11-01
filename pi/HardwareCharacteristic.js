@@ -43,7 +43,7 @@ HardwareCharacteristic.prototype.onReadRequest = function(offset, callback) {
     }
 };
 HardwareCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
-    console.log("WriteRequest | new value =", data);
+    // console.log("WriteRequest | new value =", data);
     try {
         // this.value = data.readInt32LE(0);
         // if (this._updateValueCallback) {
@@ -67,18 +67,7 @@ HardwareCharacteristic.prototype.onUnsubscribe = function() {
     this._updateValueCallback = null;
 };
 HardwareCharacteristic.prototype.onNotify = function() {
-    console.log("onNotify |")
-    // if (this._updateValueCallback) {
-    //     console.log("point 1")
-    //     var _value = new Buffer(4); // 32-bits == 4 bytes
-    //     try {
-    //         console.log("point 2", this==this._updateValueCallback)
-    //         _value.writeInt32LE(this.value, 0);
-    //         this._updateValueCallback(_value);
-    //     } catch (err) {
-    //         console.log("point 3 err")
-    //     }
-    // }
+    // console.log("onNotify |")
 };
 
 module.exports = HardwareCharacteristic;

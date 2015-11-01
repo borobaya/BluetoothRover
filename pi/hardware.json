@@ -2,17 +2,17 @@
     {
         "hardware_type": "motor", 
         "args": {
-            "pinControl": 22, 
-            "pinBackward": 18, 
-            "pinForward": 16
+            "pinControl": 12,
+            "pinForward": 16,
+            "pinBackward": 18
         }
     }, 
     {
         "hardware_type": "motor", 
         "args": {
-            "pinControl": 0, 
-            "pinBackward": 0, 
-            "pinForward": 0
+            "pinControl": 15,
+            "pinForward": 13,
+            "pinBackward": 11
         }
     }, 
     {

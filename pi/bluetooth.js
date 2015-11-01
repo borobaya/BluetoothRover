@@ -83,7 +83,14 @@ var bleno = require('bleno');
 var bluetooth_device_name = 'BLE Rover';
 
 // Handle Events
-bleno.on('stateChange', function(state) {console.log("BLE state change: ", state);});
+bleno.on('stateChange', function(state) {
+    console.log("BLE state change: ", state);
+    if (state=="poweredOn") {
+        //
+    } else {
+        startServices()
+    }
+});
 bleno.on('advertisingStart', function(error) {
     if (error) {
         console.log("Error on advertisingStart: ", error);
@@ -116,6 +123,7 @@ function startServices() {
         bleno.setServices(services);
         bleno.startAdvertising(bluetooth_device_name, serviceUuids);
     } else {
+        socket.send("set * 0");
         // If BLE has not been powered on, wait and try again
         setTimeout(startServices, 1000);
     }
