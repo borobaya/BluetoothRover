@@ -14,9 +14,11 @@ Quick notes on how to get the code to work (more for me at this early stage of d
 
 Paste in:
 
-`#!/bin/sh
-cd /home/pi/Desktop/test
-sh run.sh`
+```bash
+#!/bin/sh
+cd /home/pi/Desktop/test`
+sh run.sh
+```
 
 2. Then edit /etc/rc.local
 
