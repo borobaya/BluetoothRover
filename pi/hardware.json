@@ -3,8 +3,8 @@
         "hardware_type": "motor", 
         "args": {
             "pinControl": 12,
-            "pinForward": 16,
-            "pinBackward": 18
+            "pinForward": 18,
+            "pinBackward": 16
         }
     }, 
     {
