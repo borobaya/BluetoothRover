@@ -10,20 +10,20 @@ Quick notes on how to get the code to work (more for me at this early stage of d
 
 1. Create a shell script 'run.sh' in the home directory:
 
-`nano run.sh`
+  `nano run.sh`
 
-Paste in:
+  Paste in:
 
-```bash
-#!/bin/sh
-cd /home/pi/Desktop/test
-sh run.sh
-```
+  ```bash
+  #!/bin/sh
+  cd /home/pi/Desktop/test
+  sh run.sh
+  ```
 
 2. Then edit /etc/rc.local
 
-`sudo nano /etc/rc.local`
+  `sudo nano /etc/rc.local`
 
-Add before 'exit 0':
+  Add before 'exit 0':
 
-`sh /home/pi/run.sh &`
+  `sh /home/pi/run.sh &`
