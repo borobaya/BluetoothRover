@@ -16,7 +16,7 @@ Paste in:
 
 ```bash
 #!/bin/sh
-cd /home/pi/Desktop/test`
+cd /home/pi/Desktop/test
 sh run.sh
 ```
 
@@ -26,5 +26,4 @@ sh run.sh
 
 Add before 'exit 0':
 
-`sh /home/pi/run.sh`
-
+`sh /home/pi/run.sh &`
