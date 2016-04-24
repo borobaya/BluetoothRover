@@ -58,7 +58,7 @@ class Hardware : NSObject {
             timer = NSTimer.scheduledTimerWithTimeInterval(
                 0.2,
                 target: self,
-                selector: "updateValue",
+                selector: #selector(Hardware.updateValue),
                 userInfo: nil,
                 repeats: true)
         }

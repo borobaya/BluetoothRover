@@ -41,13 +41,13 @@ class ControlHardware : UIView {
             slider.value = Float(hardware.get())
             slider.continuous = false
             slider.frame = CGRect(x: 0, y: 0, width: width*0.5, height: 30)
-            slider.addTarget(self, action: "sliderChanged:", forControlEvents: .AllEvents)
+            slider.addTarget(self, action: #selector(ControlHardware.sliderChanged(_:)), forControlEvents: .AllEvents)
             control = slider
         } else if hardware.value_type=="binary" {
             let button = UISwitch()
             button.setOn(hardware.get() != 0, animated: false)
             button.sizeToFit()
-            button.addTarget(self, action: "toggled:", forControlEvents: UIControlEvents.TouchUpInside)
+            button.addTarget(self, action: #selector(ControlHardware.toggled(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             control = button
         } else if hardware.value_type=="continuous" {
             let value = UILabel()

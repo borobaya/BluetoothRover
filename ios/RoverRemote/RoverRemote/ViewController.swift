@@ -45,7 +45,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate {
         self.view.addSubview(statusLabel)
         
         // Detect orientation changes
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "orientationChanged",
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.orientationChanged),
             name: UIDeviceOrientationDidChangeNotification, object: nil)
     }
     

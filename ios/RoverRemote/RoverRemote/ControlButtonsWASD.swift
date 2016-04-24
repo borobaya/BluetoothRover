@@ -64,6 +64,9 @@ class ControlButtonsWASD : UIView {
         // Icons were made by Freepik and SimpleIcon from www.flaticon.com and is licensed under CC BY 3.0
         let width = min(UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height)
         
+//        let temp = "ffmpeg -i"
+//        system(temp)
+        
         let button = UIButton()
         button.tag = tag
         button.setBackgroundImage(UIImage(named: name), forState: .Normal)
@@ -74,18 +77,18 @@ class ControlButtonsWASD : UIView {
     }
     
     func addEvents() {
-        buttonUp.addTarget(self, action: "controlButtonPressed:", forControlEvents: .TouchDown)
-        buttonDown.addTarget(self, action: "controlButtonPressed:", forControlEvents: .TouchDown)
-        buttonLeft.addTarget(self, action: "controlButtonPressed:", forControlEvents: .TouchDown)
-        buttonRight.addTarget(self, action: "controlButtonPressed:", forControlEvents: .TouchDown)
+        buttonUp.addTarget(self, action: #selector(ControlButtonsWASD.controlButtonPressed(_:)), forControlEvents: .TouchDown)
+        buttonDown.addTarget(self, action: #selector(ControlButtonsWASD.controlButtonPressed(_:)), forControlEvents: .TouchDown)
+        buttonLeft.addTarget(self, action: #selector(ControlButtonsWASD.controlButtonPressed(_:)), forControlEvents: .TouchDown)
+        buttonRight.addTarget(self, action: #selector(ControlButtonsWASD.controlButtonPressed(_:)), forControlEvents: .TouchDown)
         
-        buttonUp.addTarget(self, action: "controlButtonReleased:",
+        buttonUp.addTarget(self, action: #selector(ControlButtonsWASD.controlButtonReleased(_:)),
             forControlEvents: [.TouchCancel, .TouchDragExit, .TouchUpInside])
-        buttonDown.addTarget(self, action: "controlButtonReleased:",
+        buttonDown.addTarget(self, action: #selector(ControlButtonsWASD.controlButtonReleased(_:)),
             forControlEvents: [.TouchCancel, .TouchDragExit, .TouchUpInside])
-        buttonLeft.addTarget(self, action: "controlButtonReleased:",
+        buttonLeft.addTarget(self, action: #selector(ControlButtonsWASD.controlButtonReleased(_:)),
             forControlEvents: [.TouchCancel, .TouchDragExit, .TouchUpInside])
-        buttonRight.addTarget(self, action: "controlButtonReleased:",
+        buttonRight.addTarget(self, action: #selector(ControlButtonsWASD.controlButtonReleased(_:)),
             forControlEvents: [.TouchCancel, .TouchDragExit, .TouchUpInside])
     }
     
