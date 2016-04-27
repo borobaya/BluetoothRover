@@ -19,7 +19,7 @@ class VideoFeed : UIView, FFAVPlayerControllerDelegate {
         
         self.backgroundColor = UIColor.blueColor()
         
-        frame = CGRect(x: 29, y: 30, width: 300, height: 200)
+        frame = CGRect(x: 29, y: 80, width: 300, height: 200)
         center.x = viewController.view.center.x
     }
     
@@ -49,6 +49,9 @@ class VideoFeed : UIView, FFAVPlayerControllerDelegate {
             self.insertSubview(video, atIndex:0)
             
         } else {
+            print("Failed to load video!")
+            print(error.description)
+            print(error)
             let alert = UIAlertController(title: "Failed to load video!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             viewController.presentViewController(alert, animated: true, completion: nil)

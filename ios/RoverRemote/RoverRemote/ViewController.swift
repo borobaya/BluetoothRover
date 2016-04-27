@@ -49,6 +49,15 @@ class ViewController: UIViewController, CBCentralManagerDelegate {
             name: UIDeviceOrientationDidChangeNotification, object: nil)
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        /*** TEMP ***/
+        let videoFeed = VideoFeed(viewController: self)
+        self.view.insertSubview(videoFeed, atIndex: 0)
+        videoFeed.run()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

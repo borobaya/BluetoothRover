@@ -159,6 +159,11 @@
 					5674CBE31BE62AE600D8D691 = {
 						CreatedOnToolsVersion = 7.1;
 						DevelopmentTeam = 7LF3SW5EVG;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
