@@ -1,7 +1,8 @@
 
-var HardwareService = require('./HardwareService')
+var HardwareService = require('./HardwareService');
+var Globals = require('./Globals');
 
-var servicesHardware = {}
+var servicesHardware = {};
 var services = [];
 var serviceUuids = [];
 
@@ -36,7 +37,9 @@ socket.on('monitor_error', function(err) {
 // socket.monitor(500, 0);
 
 // Handle what happens when a message is received
-socket.on('message', function(msg){
+socket.on('message', function(msg) {
+    console.log("Message received");
+
     var parts = msg.toString().split(" ");
 
     if (parts.length<2) return;
@@ -47,7 +50,7 @@ socket.on('message', function(msg){
     if (service) {
         // Hardware value updated
         var value = parseFloat(parts[1]);
-        console.log(hardware_name, "| value =", value);
+        // console.log(hardware_name, "| value =", value);
 
         var characteristic = service.characteristics[0];
         if (characteristic.value != value) {
@@ -87,8 +90,12 @@ bleno.on('stateChange', function(state) {
     console.log("BLE state change: ", state);
     if (state=="poweredOn") {
         //
+    } else if (state=="poweredOff") {
+        console.log("Resetting...");
+        bleno._bindings._hci.reset();
+        bleno._bindings._hci._socket.start();
     } else {
-        startServices()
+        startServices();
     }
 });
 bleno.on('advertisingStart', function(error) {
@@ -112,9 +119,18 @@ bleno.on('servicesSet', function(error) {
         console.log("BLE services set successfully.");
     }
 });
-bleno.on('accept', function(clientAddress) {console.log("Accepted client at address: ", clientAddress);});
-bleno.on('disconnect', function(clientAddress) {console.log("Disconnected client at address: ", clientAddress);});
+bleno.on('accept', function(clientAddress) {
+    console.log("Accepted client at address: ", clientAddress);
+    // Initialise all values to zero on the rover
+    socket.send("set * 0");
+
+    startDetectingBrokenCommunication();
+});
+bleno.on('disconnect', function(clientAddress) {
+    console.log("Disconnected client at address: ", clientAddress);
+});
 bleno.on('rssiUpdate', function(rssi) {console.log("RSSI updated: ", rssi);});
+bleno.on('mtuChange', function(mtu) {console.log("MTU: ", mtu);});
 
 function startServices() {
     if (bleno.state=="poweredOn") {
@@ -137,3 +153,32 @@ if (bleno.state!="poweredOn") {
 // Wait for python data to be registered before advertising
 setTimeout(startServices, 1000);
 
+// ---------------------------------------------------------------------------------------------
+// Ensure that the connection is stable
+
+var autoDisconnectTimeout = null;
+function autoDisconnectOnBrokenCommunication() {
+    // console.log( bleno._bindings._hci._isDevUp );
+    console.log( bleno._bindings._handle );
+    if (bleno._bindings._handle != null) {
+        Globals.timeSinceLastMessage++;
+        console.log(Globals.timeSinceLastMessage);
+        if (Globals.timeSinceLastMessage > 30) {
+            Globals.timeSinceLastMessage = 0;
+            console.log("Disconnecting due to inactivity...");
+            // bleno.disconnect();
+            // if (bleno._bindings._handle != null) {
+            //     console.log("Disconnecting did not work. Resetting...");
+            //     bleno._bindings._hci.reset();
+            // }
+        }
+        autoDisconnectTimeout = setTimeout(autoDisconnectOnBrokenCommunication, 1000);
+    } else {
+        autoDisconnectTimeout = null;
+    }
+}
+function startDetectingBrokenCommunication() {
+    if (autoDisconnectTimeout == null) {
+        autoDisconnectTimeout = setTimeout(autoDisconnectOnBrokenCommunication, 5000);
+    }
+}

@@ -1,5 +1,6 @@
 var bleno = require('bleno');
 var util = require('util');
+var Globals = require('./Globals');
 var Characteristic = bleno.Characteristic;
 var Descriptor = bleno.Descriptor;
 
@@ -33,17 +34,19 @@ util.inherits(HardwareCharacteristic, Characteristic);
 
 HardwareCharacteristic.prototype.onReadRequest = function(offset, callback) {
     if ((this.value==null)||isNaN(this.value)) this.value = 0.0;
-    console.log("ReadRequest | value =", this.value);
+    // console.log("ReadRequest | value =", this.value);
     try {
         var _value = new Buffer(4); // 32-bits == 4 bytes
         _value.writeInt32LE(this.value, 0);
         callback(Characteristic.RESULT_SUCCESS, _value);
     } catch (err) {
+        console.log("Error while reading HardwareCharacteristic value");
         callback(Characteristic.RESULT_INVALID_ATTRIBUTE_LENGTH, new Buffer(0));
     }
 };
 HardwareCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
-    // console.log("WriteRequest | new value =", data);
+    console.log("WriteRequest | new value =", data);
+    Globals.timeSinceLastMessage = 0;
     try {
         // this.value = data.readInt32LE(0);
         // if (this._updateValueCallback) {
@@ -55,15 +58,16 @@ HardwareCharacteristic.prototype.onWriteRequest = function(data, offset, without
 
         callback(Characteristic.RESULT_SUCCESS);
     } catch (err) {
+        console.log("Error while writing HardwareCharacteristic value");
         callback(Characteristic.RESULT_INVALID_ATTRIBUTE_LENGTH);
     }
 };
 HardwareCharacteristic.prototype.onSubscribe = function(maxValueSize, updateValueCallback) {
-    console.log("onSubscribe |", maxValueSize, "|", updateValueCallback)
+    // console.log("onSubscribe |", maxValueSize, "|", updateValueCallback)
     this._updateValueCallback = updateValueCallback;
 };
 HardwareCharacteristic.prototype.onUnsubscribe = function() {
-    console.log("onUnsubscribe |")
+    // console.log("onUnsubscribe |")
     this._updateValueCallback = null;
 };
 HardwareCharacteristic.prototype.onNotify = function() {

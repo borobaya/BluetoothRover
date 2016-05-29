@@ -29,9 +29,9 @@ var HardwareService = function(msg, socket) {
     if (is_writable) characteristic.properties.push('writeWithoutResponse');
     this.characteristics.push(characteristic);
 
-    console.log("New hardware registered: ", hardware_name, "\n\tvalue: ", value,
-        "\n\tpermissions: ", permissions, "\n\tis_writable: ", is_writable, "\n\tvalue_type: ",
-        value_type, "\n\tvalue_min: ", value_min, "\n\tvalue_max: ", value_max);
+    // console.log("New hardware registered: ", hardware_name, "\n\tvalue: ", value,
+    //     "\n\tpermissions: ", permissions, "\n\tis_writable: ", is_writable, "\n\tvalue_type: ",
+    //     value_type, "\n\tvalue_min: ", value_min, "\n\tvalue_max: ", value_max);
 };
 
 util.inherits(HardwareService, PrimaryService);
