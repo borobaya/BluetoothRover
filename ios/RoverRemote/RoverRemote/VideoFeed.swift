@@ -8,24 +8,27 @@
 
 class VideoFeed : UIView, FFAVPlayerControllerDelegate {
     
-    var viewController : UIViewController!
+//    var viewController : UIViewController!
     var playerController : FFAVPlayerController!
+    var parent : UIView!
     
-    convenience init(viewController : UIViewController) {
+    convenience init(parentView : UIView) {
         self.init()
         
-        self.frame.size = viewController.view.frame.size
-        self.viewController = viewController
+        self.parent = parentView
+        self.frame.size = parent.frame.size
         
         self.backgroundColor = UIColor.blueColor()
         
-        frame = CGRect(x: 29, y: 80, width: 300, height: 200)
-        center.x = viewController.view.center.x
+        let width = parent.frame.width * 0.6
+        
+        frame = CGRect(x: 29, y: 80, width: width, height: width * 240/320)
+        center.x = parent.center.x
     }
     
     func run() {
-        
-        let urlStr = "rtsp://mpv.cdn3.bigCDN.com:554/bigCDN/definst/mp4:bigbuckbunnyiphone_400.mp4"
+        var urlStr = "rtsp://mpv.cdn3.bigCDN.com:554/bigCDN/definst/mp4:bigbuckbunnyiphone_400.mp4"
+        urlStr = "rtsp://192.168.1.82:5006/"
         let mediaURL = NSURL(string: urlStr)
         
         playerController = FFAVPlayerController()
@@ -50,8 +53,8 @@ class VideoFeed : UIView, FFAVPlayerControllerDelegate {
             
         } else {
             print("Failed to load video!")
-            print(error.description)
             print(error)
+            let viewController = UIApplication.sharedApplication().keyWindow!.rootViewController!
             let alert = UIAlertController(title: "Failed to load video!", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             viewController.presentViewController(alert, animated: true, completion: nil)

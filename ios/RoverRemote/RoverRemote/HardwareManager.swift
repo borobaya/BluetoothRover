@@ -28,6 +28,9 @@ class HardwareManager : NSObject, CBPeripheralDelegate {
     var controlSeparate : UIView?
     var controlSeparateList : [String : ControlHardware] = [:]
     
+    // Camera Feed
+    var cameraFeed : VideoFeed?
+    
     func clearAllHardware() {
         for (_, hardware) in hardwares {
             hardware.removeTimer()
@@ -122,35 +125,35 @@ class HardwareManager : NSObject, CBPeripheralDelegate {
         
         // --
         
-        if controlSeparate == nil {
-            controlSeparate = UIView()
-            controlSeparate?.frame.origin = CGPoint(x:parent!.frame.width*0.2, y: 110)
-            parent!.addSubview(controlSeparate!)
-        }
-        
-        var y = CGFloat(0)
-        // Skip past controls already placed
-        for (hardware_name, _) in hardwares {
-            let control = controlSeparateList[hardware_name]
-            if control != nil {
-                y += control!.frame.maxY - control!.frame.minY + 20
-            }
-        }
-        // Add separate controls for each hardware
-        for (hardware_name, hardware) in hardwares {
-            var control = controlSeparateList[hardware_name]
-            
-            if control == nil {
-                control = ControlHardware()
-                control!.setup(hardware, frame: parent!.frame)
-                control!.center = CGPoint(x: control!.center.x, y: y)
-                controlSeparateList[hardware_name] = control!
-                controlSeparate!.addSubview(control!)
-                y += control!.frame.maxY - control!.frame.minY + 20
-            }
-        }
-        
-        resizeToFitSubviews(controlSeparate!)
+//        if controlSeparate == nil {
+//            controlSeparate = UIView()
+//            controlSeparate?.frame.origin = CGPoint(x:parent!.frame.width*0.2, y: 110)
+//            parent!.addSubview(controlSeparate!)
+//        }
+//        
+//        var y = CGFloat(0)
+//        // Skip past controls already placed
+//        for (hardware_name, _) in hardwares {
+//            let control = controlSeparateList[hardware_name]
+//            if control != nil {
+//                y += control!.frame.maxY - control!.frame.minY + 20
+//            }
+//        }
+//        // Add separate controls for each hardware
+//        for (hardware_name, hardware) in hardwares {
+//            var control = controlSeparateList[hardware_name]
+//            
+//            if control == nil {
+//                control = ControlHardware()
+//                control!.setup(hardware, frame: parent!.frame)
+//                control!.center = CGPoint(x: control!.center.x, y: y)
+//                controlSeparateList[hardware_name] = control!
+//                controlSeparate!.addSubview(control!)
+//                y += control!.frame.maxY - control!.frame.minY + 20
+//            }
+//        }
+//        
+//        resizeToFitSubviews(controlSeparate!)
         
         // --
         
@@ -170,19 +173,28 @@ class HardwareManager : NSObject, CBPeripheralDelegate {
             }
         }
         
+        // --
+        
+        if cameraFeed == nil {
+            // Load camera feed
+            cameraFeed = VideoFeed(parentView: parent!)
+            parent!.insertSubview(cameraFeed!, atIndex: 0)
+            cameraFeed!.run()
+        }
+        
         repositionUI()
     }
     
     func repositionUI() {
         let orientation = UIApplication.sharedApplication().statusBarOrientation
         
-        if controlSeparate != nil {
-            controlSeparate!.center = CGPoint(x: parent!.center.x, y: controlSeparate!.center.y)
-        }
+//        if controlSeparate != nil {
+//            controlSeparate!.center = CGPoint(x: parent!.center.x, y: controlSeparate!.center.y)
+//        }
         
         if controlWASD != nil {
             if orientation.isPortrait {
-                controlWASD!.center = CGPoint(x: parent!.center.x, y: parent!.center.y)
+                controlWASD!.center = CGPoint(x: parent!.center.x, y: parent!.center.y * 1.05)
             } else if orientation.isLandscape {
                 controlWASD!.center = CGPoint(x: parent!.center.x*0.66, y: parent!.center.y*1.5)
             }
@@ -194,6 +206,10 @@ class HardwareManager : NSObject, CBPeripheralDelegate {
             } else if orientation.isLandscape {
                 controlJoystick!.center = CGPoint(x: parent!.center.x*1.33, y: parent!.center.y*1.5)
             }
+        }
+        
+        if cameraFeed != nil {
+            cameraFeed!.center.x = parent!.center.x
         }
     }
     

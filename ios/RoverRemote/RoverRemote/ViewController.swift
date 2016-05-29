@@ -47,16 +47,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate {
         // Detect orientation changes
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.orientationChanged),
             name: UIDeviceOrientationDidChangeNotification, object: nil)
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        /*** TEMP ***/
-        let videoFeed = VideoFeed(viewController: self)
-        self.view.insertSubview(videoFeed, atIndex: 0)
-        videoFeed.run()
-    }
+    } 
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
